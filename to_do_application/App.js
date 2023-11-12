@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { StyleSheet, View, ScrollView } from "react-native";
+import { StyleSheet, View, ScrollView, FlatList } from "react-native";
 import Header from "./components/Header";
 import Item from "./components/Item";
 import Form from "./components/Form";
@@ -16,6 +16,15 @@ export default function App() {
     { id: 7, text: "Buy apples" },
     { id: 8, text: "Buy oranges" },
     { id: 9, text: "Buy watermelon" },
+    { id: 10, text: "Buy water" },
+    { id: 11, text: "Buy coffee" },
+    { id: 12, text: "Buy tea" },
+    { id: 13, text: "Buy juice" },
+    { id: 14, text: "Take a shower" },
+    { id: 15, text: "Brush teeth" },
+    { id: 16, text: "Wash clothes" },
+    { id: 17, text: "Cook dinner" },
+    { id: 18, text: "Go to bed" },
   ]);
 
   const submitHandler = (text) => {
@@ -25,16 +34,12 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Header />
-      <ScrollView>
+      <View style={styles.formListContainer}>
+        <Form submitHandler={submitHandler} />
         <View>
-          <Form submitHandler={submitHandler} />
-          <View>
-            {items.map((item) => (
-              <Item key={item.id} item={item} items={items} setItems={setItems} />
-            ))}
-          </View>
+          <FlatList data={items} renderItem={({ item }) => <Item item={item} items={items} setItems={setItems} />} />
         </View>
-      </ScrollView>
+      </View>
       <StatusBar style="auto" />
     </View>
   );
@@ -45,19 +50,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-  text: {
-    fontSize: 20,
-    padding: 20,
-    margin: 20,
-    backgroundColor: "lightgray",
-  },
-  textButtonContainer: {
-    flexDirection: "row",
-    borderWidth: 1,
-    borderColor: "black",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginVertical: 10,
-    padding: 10,
+  formListContainer: {
+    flex: 1,
   },
 });
