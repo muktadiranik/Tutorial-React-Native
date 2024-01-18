@@ -1,4 +1,10 @@
-import { View, Text, StyleSheet, Alert, FlatList } from "react-native";
+import {
+  View,
+  useWindowDimensions,
+  StyleSheet,
+  Alert,
+  FlatList,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import Title from "../components/Title";
@@ -26,6 +32,8 @@ const GameScreen = ({ userNumber, gameOverHandler, updateRoundsNumber }) => {
   const initialGuess = generateRandomNumber(1, 100, userNumber);
   const [guess, setGuess] = useState(initialGuess);
   const [rounds, setRounds] = useState([]);
+
+  const { width, height } = useWindowDimensions();
 
   const nextGuessHandler = (direction) => {
     if (
@@ -65,9 +73,8 @@ const GameScreen = ({ userNumber, gameOverHandler, updateRoundsNumber }) => {
     maximumValue = 100;
   }, []);
 
-  return (
-    <View style={styles.screen}>
-      <Title>Opponent's Guess</Title>
+  let content = (
+    <>
       <NumberContainer>{guess}</NumberContainer>
       <Card>
         <InstructionText style={styles.instructionText}>
@@ -86,6 +93,33 @@ const GameScreen = ({ userNumber, gameOverHandler, updateRoundsNumber }) => {
           </View>
         </View>
       </Card>
+    </>
+  );
+
+  if (width > 500) {
+    content = (
+      <>
+        <View style={styles.buttonsContainerWide}>
+          <View style={styles.buttonContainer}>
+            <PrimaryButton onPress={nextGuessHandler.bind(this, "higher")}>
+              <AntDesign name="plus" size={24} color="black" />
+            </PrimaryButton>
+          </View>
+          <NumberContainer>{guess}</NumberContainer>
+          <View style={styles.buttonContainer}>
+            <PrimaryButton onPress={nextGuessHandler.bind(this, "lower")}>
+              <AntDesign name="minus" size={24} color="black" />
+            </PrimaryButton>
+          </View>
+        </View>
+      </>
+    );
+  }
+
+  return (
+    <View style={styles.screen}>
+      <Title>Opponent's Guess</Title>
+      {content}
       <View style={styles.flatListContainer}>
         <FlatList
           data={rounds}
@@ -108,6 +142,7 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     padding: 24,
+    alignItems: "center",
   },
   buttonsContainer: {
     flexDirection: "row",
@@ -121,5 +156,9 @@ const styles = StyleSheet.create({
   flatListContainer: {
     flex: 1,
     padding: 16,
+  },
+  buttonsContainerWide: {
+    flexDirection: "row",
+    alignItems: "center",
   },
 });

@@ -1,35 +1,65 @@
-import { View, StyleSheet, Image, Text } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Image,
+  Text,
+  useWindowDimensions,
+  ScrollView,
+} from "react-native";
 import React from "react";
 import Title from "../components/Title";
 import Colors from "../constants/colors";
 import PrimaryButton from "../components/PrimaryButton";
 
 const GameOverScreen = ({ roundsNumber, userNumber, onRestart }) => {
+  const { width, height } = useWindowDimensions();
+
+  let imageSize = 300;
+
+  if (width < 380) {
+    imageSize = 150;
+  }
+
+  if (height < 400) {
+    imageSize = 80;
+  }
+
+  const imageStyle = {
+    width: imageSize,
+    height: imageSize,
+    borderRadius: imageSize / 2,
+  };
+
   return (
-    <View style={styles.rootContainer}>
-      <Title>Game Over</Title>
-      <View style={styles.imageContainer}>
-        <Image
-          style={styles.image}
-          source={require("../assets/images/sigmund-By-tZImt0Ms-unsplash.jpg")}
-        />
+    <ScrollView style={styles.screen}>
+      <View style={styles.rootContainer}>
+        <Title>Game Over</Title>
+        <View style={[styles.imageContainer, imageStyle]}>
+          <Image
+            style={styles.image}
+            source={require("../assets/images/sigmund-By-tZImt0Ms-unsplash.jpg")}
+          />
+        </View>
+        <View>
+          <Text style={styles.summaryText}>
+            Your phone needed{" "}
+            <Text style={styles.highlightText}>{roundsNumber}</Text> rounds to
+            guess the number{" "}
+            <Text style={styles.highlightText}>{userNumber}</Text>
+          </Text>
+          <PrimaryButton onPress={onRestart}>Start New Game</PrimaryButton>
+        </View>
       </View>
-      <View>
-        <Text style={styles.summaryText}>
-          Your phone needed{" "}
-          <Text style={styles.highlightText}>{roundsNumber}</Text> rounds to
-          guess the number{" "}
-          <Text style={styles.highlightText}>{userNumber}</Text>
-        </Text>
-        <PrimaryButton onPress={onRestart}>Start New Game</PrimaryButton>
-      </View>
-    </View>
+    </ScrollView>
   );
 };
 
 export default GameOverScreen;
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+  },
   rootContainer: {
     flex: 1,
     padding: 24,
@@ -37,9 +67,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   imageContainer: {
-    width: 350,
-    height: 350,
-    borderRadius: 175,
     borderWidth: 3,
     borderColor: Colors.accent500,
     overflow: "hidden",
